@@ -1,0 +1,52 @@
+{
+    "Json_Data": {
+        "customer_name": "",
+        "items": [
+            {
+                "product_id": "P001",
+                "original_input": "東坡肉",
+                "quantity": "12x12 42塊",
+                "matched_name": "廣東臘肉",
+                "confidence": "57.14"
+            },
+            {
+                "product_id": "P002",
+                "original_input": "猪皮",
+                "quantity": "8公斤",
+                "matched_name": "魚皮",
+                "confidence": "50.00"
+            },
+            {
+                "product_id": "P003",
+                "original_input": "细肉络",
+                "quantity": "5公斤",
+                "matched_name": "肉鬆",
+                "confidence": "40.00"
+            },
+            {
+                "product_id": "P004",
+                "original_input": "响排",
+                "quantity": "10公斤 3x3",
+                "matched_name": "排骨",
+                "confidence": "50.00"
+            },
+            {
+                "product_id": "P005",
+                "original_input": "蚝烙脚",
+                "quantity": "10对",
+                "matched_name": null,
+                "confidence": null
+            },
+            {
+                "product_id": "P006",
+                "original_input": "蒸泥白豆",
+                "quantity": "2公斤",
+                "matched_name": "甜豆",
+                "confidence": "33.33"
+            }
+        ],
+        "status": "",
+        "evaluation": false,
+        "file_name": "3.png"
+    }
+}
