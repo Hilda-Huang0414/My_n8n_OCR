@@ -1,0 +1,353 @@
+{
+  "name": "My n8n OCR",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ocr_files",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1240,
+        -460
+      ],
+      "id": "737cab6b-90d6-4b5b-907a-d1f3cfa04142",
+      "name": "Webhook",
+      "webhookId": "723fe8e7-b0ba-45d3-92e0-8e9e8024e083"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.file_type }}",
+                    "rightValue": "images",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "398f3a77-c97a-4e86-9279-33da8f15462f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "85879b9d-b3e6-4847-ab67-187291498b44",
+                    "leftValue": "={{ $json.body.file_type }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1000,
+        -460
+      ],
+      "id": "4f480ec0-e994-495e-9022-9e3ea3fcb620",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:56781/images_ocr",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -760,
+        -560
+      ],
+      "id": "dd9174de-0fb8-4a84-be1c-c4685bd0c185",
+      "name": "Image_OCR",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "gjLjw2F8gY523pgh",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:56781/pdfs_ocr",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -760,
+        -380
+      ],
+      "id": "b5bd981a-c067-4345-a8a1-a11d90636c03",
+      "name": "PDF_OCR",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "gjLjw2F8gY523pgh",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e88fa6ae-619e-4353-93d5-ffd4d944373f",
+              "leftValue": "={{ $json.evaluation }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -460,
+        -480
+      ],
+      "id": "1448d45b-b721-4339-8a5c-5d983e7d68fd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fromEmail": "1468668449@qq.com",
+        "toEmail": "hilda_1223@qq.com",
+        "subject": "Error_OCR",
+        "emailFormat": "text",
+        "text": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -200,
+        -380
+      ],
+      "id": "18097e8e-96cb-448c-a4e2-cef8a6adf1b9",
+      "name": "Send Email",
+      "webhookId": "e4d8c6d5-3d76-4b57-9fe8-c58339516011",
+      "credentials": {
+        "smtp": {
+          "id": "ZQgXYCpTMQch9IAy",
+          "name": "SMTP account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:56781/save_json",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "Json_Data",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -200,
+        -580
+      ],
+      "id": "76a3d309-d8a7-4a87-9c56-b181906d3a84",
+      "name": "Save Ocr"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "localhost:5678",
+            "user-agent": "python-requests/2.32.3",
+            "accept-encoding": "gzip, deflate",
+            "accept": "*/*",
+            "connection": "keep-alive",
+            "content-length": "472",
+            "content-type": "multipart/form-data; boundary=547a43e0727543db1946478f620e86d5"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "file_name": "sap_order_chinese_4.pdf",
+            "file_type": "pdf",
+            "input_data": "D:\\Python_Project\\2024\\n8n_project\\z_n8n\\files\\sap_order_chinese_4.pdf"
+          },
+          "webhookUrl": "http://localhost:5678/webhook-test/ocr_files",
+          "executionMode": "test"
+        }
+      }
+    ],
+    "Save Ocr": [
+      {
+        "json": {
+          "message": "Data saved successfully",
+          "status": "success"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Image_OCR",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDF_OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image_OCR": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF_OCR": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Save Ocr",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "79504f0c-9ee4-4144-904f-c49fd3f19c0e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "932e14de15dc2e5824c5876b6e5451f3a299da584995b69523333b1430eabd36"
+  },
+  "id": "TiKqPmy96jOUguOs",
+  "tags": []
+}
